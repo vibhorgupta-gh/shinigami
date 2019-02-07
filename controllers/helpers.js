@@ -9,6 +9,17 @@ let login = (req, res, next) => {
   }
 }
 
+let patch = (req, res, next ) => {
+  let object = req.body.object
+  let patch = req.body.patch
+  res.json(object)
+}
+
+let thumbnail = (req, res, next) => {
+  let url = req.body.url
+  res.json(url)
+}
+
 let logout = (req, res, next) => {
   if (req.user) {
     localStorage.removeItem('token')
@@ -18,5 +29,7 @@ let logout = (req, res, next) => {
 
 module.exports = {
   login: login,
+  patch: patch,
+  thumbnail: thumbnail,
   logout: logout
 }
