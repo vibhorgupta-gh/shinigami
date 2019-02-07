@@ -8,6 +8,7 @@
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.4",
+    "jsonpatch": "^3.0.1",
     "jsonwebtoken": "^8.4.0"
   },
   "scripts": {
