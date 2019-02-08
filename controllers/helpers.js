@@ -10,7 +10,7 @@ const login = (req, res) => {
   const { username, password } = req.body
   if (username && password) {
     let options = {}
-    options.expiresIn = 10;
+    options.expiresIn = 120;
     let token = jwt.sign({ username }, secret, options);
     return res.status(200).json({token: token, msg: 'success'})
   }
