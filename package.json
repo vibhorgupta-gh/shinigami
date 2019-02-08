@@ -17,9 +17,14 @@
     "path": "^0.12.7"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "babel-node server.js"
   },
   "engines": {
     "node": "*"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
   }
 }

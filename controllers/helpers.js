@@ -1,9 +1,9 @@
-const fs = require('fs-extra')
-const { apply_patch } = require('jsonpatch')
-const jwt = require('jsonwebtoken')
-const path = require('path')
-const axios = require('axios')
-const { secret } = require('../config.js')
+import fs from 'fs-extra'
+import { apply_patch } from 'jsonpatch'
+import jwt from 'jsonwebtoken'
+import path from 'path'
+import axios from 'axios'
+import { secret } from '../config.js'
 
 
 const login = (req, res) => {

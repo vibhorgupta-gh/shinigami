@@ -1,9 +1,9 @@
-const express = require('express')
-const router = express.Router()
-const passport = require('passport')
-const jwtStrategy  = require('../passport/jwt')
-const { login, patch, thumbnail } = require('../controllers/helpers.js')
+import express from 'express'
+import passport from 'passport'
+import jwtStrategy from '../passport/jwt'
+import { login, patch, thumbnail } from '../controllers/helpers.js'
 
+const router = express.Router()
 passport.use(jwtStrategy)
 
 router.post('/login', login)
