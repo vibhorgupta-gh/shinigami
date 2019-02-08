@@ -1,6 +1,6 @@
-import express from 'express'
+const express = require('express')
 const router = express.Router()
-import { login, patch, thumbnail } from '../controllers/helpers.js'
+const { login, patch, thumbnail } = require('../controllers/helpers.js')
 
 router.post('/login', login)
 router.post('/patch', patch)
