@@ -1,64 +1,47 @@
-import fs from 'fs-extra'
-import { apply_patch } from 'jsonpatch'
-import jwt from 'jsonwebtoken'
-import path from 'path'
-import axios from 'axios'
-import { secret } from '../config.js'
+const { apply_patch } = require('jsonpatch')
+const jwt = require('jsonwebtoken')
+const path = require('path')
+const axios = require('axios')
+const { secret } = require('../config.js')
 
 
-const login = (req, res) => {
-  const { username, password } = req.body
+const token = (username, password) => {
   if (username && password) {
     let options = {}
     options.expiresIn = 120;
-    let token = jwt.sign({ username }, secret, options);
-    return res.status(200).json({token: token, msg: 'success'})
+    return jwt.sign({ username }, secret, options);
   }
-  return res.status(401).json({ msg: 'failed' })
+  return null
 }
 
-const patch = (req, res) => {
-  const { object, patch } = req.body
+const patchJson = (object, patch) => {
   if (object && patch) {
     let patchedObject = apply_patch(object, patch)
-    return res.status(200).json({result: patchedObject, msg: 'success'})
+    return patchedObject
   }
-  return res.status(401).json({ msg: 'failed' })
+  return object
 }
 
-const thumbnail = async(req, res, next) => {
-
-  const { url } = req.body
-  const downloadPath = __dirname + '/image.png'
-  const thumbnailPath = __dirname + '/thumbnail.png'
-
-  const writeStream = fs.createWriteStream(downloadPath)
-  const readStream = fs.createReadStream(thumbnailPath)
-
+const download = async(url, downloadPath) => {
   const options = {
     width: 50,
     height: 50
   }
-
   const request = await axios({
     url: 'https://google.com',
     method: 'GET'
   })
-
   const response = await axios({
     url,
     method: 'GET',
     responseType: 'stream',
     headers: { 'Cookie' : request.headers['set-cookie'] }
   })
-
-  response.data.pipe(writeStream)
-    .on('finish', () => { res.status(200).json({ msg: 'success' }) })
-    .on('error', () => { res.status(401).json({ msg: 'failed' }) })
+  return response.data
 }
 
 module.exports = {
-  login: login,
-  patch: patch,
-  thumbnail: thumbnail
+  token,
+  patchJson,
+  download
 }
