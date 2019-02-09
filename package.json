@@ -17,12 +17,18 @@
     "path": "^0.12.7"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "test": "cd test && mocha --timeout 30000 --exit"
   },
   "engines": {
     "node": "*"
   },
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "expect": "^24.1.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9",
+    "should": "^13.2.3"
   }
 }
