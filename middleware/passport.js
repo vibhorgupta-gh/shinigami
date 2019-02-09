@@ -7,9 +7,8 @@ options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
 options.secretOrKey = secret
 
 module.exports = new JwtStrategy(options, (jwt_payload, done) => {
-
-    if (jwt_payload.username) {
-        return done(null, true)
-    }
-    return done(null, false)
+  if (jwt_payload.username) {
+    return done(null, true)
+  }
+  return done(null, false)
 })

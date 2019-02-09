@@ -1,5 +1,5 @@
 const handleResponse = (response, statusCode, message, value) => {
-  return response.status(statusCode).json({msg: message, value: value})
+  return response.status(statusCode).json({ msg: message, value: value })
 }
 
 const handleInvalidRequest = (request, parameter) => {

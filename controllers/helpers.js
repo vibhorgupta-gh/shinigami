@@ -22,7 +22,7 @@ const patchJson = (object, patch) => {
   return object
 }
 
-const download = async(url, downloadPath) => {
+const download = async (url, downloadPath) => {
   const options = {
     width: 50,
     height: 50
