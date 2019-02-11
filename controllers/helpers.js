@@ -13,8 +13,8 @@ const { secret } = require('../config.js')
 const token = (username, password) => {
   if (username && password) {
     let options = {}
-    options.expiresIn = 20;
-    return jwt.sign({ username }, secret, options);
+    options.expiresIn = 20
+    return jwt.sign({ username }, secret, options)
   }
   return null
 }
@@ -53,7 +53,7 @@ const download = async (url, downloadPath) => {
     url,
     method: 'GET',
     responseType: 'stream',
-    headers: { 'Cookie' : request.headers['set-cookie'] }
+    headers: { 'Cookie': request.headers['set-cookie'] }
   })
   return response.data
 }

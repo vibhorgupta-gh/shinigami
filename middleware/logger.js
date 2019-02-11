@@ -12,14 +12,14 @@ const options = {
     json: true,
     maxsize: 5242880, // 5MB
     maxFiles: 5,
-    colorize: false,
+    colorize: false
   },
   console: {
     level: 'debug',
     handleExceptions: true,
     json: false,
-    colorize: true,
-  },
+    colorize: true
+  }
 }
 
 /**
@@ -30,14 +30,14 @@ const Logger = new Winston.createLogger({
     new Winston.transports.File(options.file),
     new Winston.transports.Console(options.console)
   ],
-  exitOnError: false, // do not exit on handled exceptions
+  exitOnError: false // do not exit on handled exceptions
 })
 
 /**
  * create a stream object with a 'write' function that will be used by `morgan`
  */
 Logger.stream = {
-  write: function(message, encoding) {
+  write: function (message, encoding) {
     // use the 'info' log level so the output will be picked up by both transports (file and console)
     Logger.info(message)
   }

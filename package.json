@@ -62,7 +62,7 @@
     "name": "stateless microservice",
     "version": "1.0.0",
     "template": {
-        "forceLanguage": "en"
+      "forceLanguage": "en"
     }
   }
 }

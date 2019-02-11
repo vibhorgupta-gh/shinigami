@@ -2,6 +2,7 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const promise = require('chai-as-promised')
 const should = chai.should()
+const path = require('path')
 const server = require('../server.js')
 const { token, patchJson, download } = require('../controllers/helpers.js')
 const { handleInvalidRequest } = require('../middleware/validator.js')
@@ -10,7 +11,6 @@ chai.use(chaiHttp)
 chai.use(promise)
 
 describe('Unit test', () => {
-
   it('token function works', done => {
     let username = 'shinigami'
     let password = 'shinigami'
@@ -22,8 +22,8 @@ describe('Unit test', () => {
   })
 
   it('patchJson function works', done => {
-    let object = {foo: 'bar'}
-    let patch = [{op: 'add', path: '/baz', value: 'boo'}]
+    let object = { foo: 'bar' }
+    let patch = [{ op: 'add', path: '/baz', value: 'boo' }]
     let patchedObject = patchJson(object, patch)
     patchedObject.should.be.an('object')
     patchedObject.should.have.property('baz')
@@ -35,15 +35,13 @@ describe('Unit test', () => {
 
   it('download function works', () => {
     let url = 'https://bit.ly/2E17Ncg'
-    let downloadPath = __dirname + '/image.png'
+    let downloadPath = path.join(__dirname, '/image.png')
     const data = download(url, downloadPath)
     return data.should.be.fulfilled
   })
-
 })
 
 describe('Integration test', () => {
-
   let value = ''
 
   it('login route works', done => {
@@ -60,7 +58,7 @@ describe('Integration test', () => {
         value = res.body.value
         value.should.be.an('string')
       })
-      done()
+    done()
   })
 
   it('login route returns 501 on invalid request', done => {
@@ -74,13 +72,13 @@ describe('Integration test', () => {
       .end((req, res) => {
         res.status.should.be.equal(501)
       })
-      done()
+    done()
   })
 
   it('patch route works', done => {
     let body = {
-      object: {foo: 'bar'},
-      patch: [{op: 'add', path: '/baz', value: 'boo'}]
+      object: { foo: 'bar' },
+      patch: [{ op: 'add', path: '/baz', value: 'boo' }]
     }
     chai
       .request(server)
@@ -92,12 +90,12 @@ describe('Integration test', () => {
         let value = res.body.value
         value.should.be.an('object')
       })
-      done()
+    done()
   })
 
   it('patch route returns 501 on invalid request', done => {
     let body = {
-      patch: [{op: 'add', path: '/baz', value: 'boo'}]
+      patch: [{ op: 'add', path: '/baz', value: 'boo' }]
     }
     chai
       .request(server)
@@ -107,7 +105,7 @@ describe('Integration test', () => {
       .end((req, res) => {
         res.status.should.be.equal(501)
       })
-      done()
+    done()
   })
 
   it('thumbnail route works', done => {
@@ -124,7 +122,7 @@ describe('Integration test', () => {
         let msg = res.body.msg
         msg.should.be.equal('success')
       })
-      done()
+    done()
   })
 
   it('thumbnail route returns 501 on invalid request', done => {
@@ -137,18 +135,16 @@ describe('Integration test', () => {
       .end((req, res) => {
         res.status.should.be.equal(501)
       })
-      done()
+    done()
   })
-
 })
 
 describe('Validator test', () => {
-
-    let request = {
-      body: {
-        param: 'value'
-      }
+  let request = {
+    body: {
+      param: 'value'
     }
+  }
 
   it('invalid requests are handled correctly', (done) => {
     let response = handleInvalidRequest(request, 'param')
@@ -160,8 +156,8 @@ describe('Validator test', () => {
 
   it('401 response from /patch if authentication fails', done => {
     let body = {
-      object: {foo: 'bar'},
-      patch: [{op: 'add', path: '/baz', value: 'boo'}]
+      object: { foo: 'bar' },
+      patch: [{ op: 'add', path: '/baz', value: 'boo' }]
     }
     chai
       .request(server)
@@ -170,7 +166,7 @@ describe('Validator test', () => {
       .end((req, res) => {
         res.status.should.be.equal(401)
       })
-      done()
+    done()
   })
 
   it('401 response from /thumbnail if authentication fails', done => {
@@ -184,7 +180,6 @@ describe('Validator test', () => {
       .end((req, res) => {
         res.status.should.be.equal(401)
       })
-      done()
+    done()
   })
-
 })
