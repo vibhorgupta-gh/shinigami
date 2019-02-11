@@ -8,7 +8,7 @@ const { secret } = require('../config.js')
 const token = (username, password) => {
   if (username && password) {
     let options = {}
-    options.expiresIn = 120;
+    options.expiresIn = 20;
     return jwt.sign({ username }, secret, options);
   }
   return null

@@ -10,31 +10,50 @@ passport.use(jwtStrategy)
 
 router.post('/login', (req, res, next) => {
     let invalidRequest = handleInvalidRequest(req, 'username') || handleInvalidRequest(req, 'password')
-    if (invalidRequest) handleResponse(res, 501, invalidRequest.message)
+    if (invalidRequest) {
+      return handleResponse(res, 501, invalidRequest.message)
+    }
     let { username, password} = req.body
     let jwtToken = token(username, password)
-    jwtToken ? handleResponse(res, 200, 'success', jwtToken) : handleResponse(res, 401, 'failure')
+    if (jwtToken) {
+      return handleResponse(res, 200, 'success', jwtToken)
+    } else {
+      return handleResponse(res, 401, 'failure')
+    }
+
 })
 
 router.post('/patch', passport.authenticate('jwt', { session: false }), (req, res, next) => {
-    let invalidRequest = handleInvalidRequest(req, 'object') || handleInvalidRequest(req, 'patch')
-    if (invalidRequest) handleResponse(res, 501, invalidRequest.message)
+    let invalidRequest = handleInvalidRequest(req, 'object')
+    if (invalidRequest) {
+      return handleResponse(res, 501, invalidRequest.message)
+    }
     let { object, patch } = req.body
     let patchedObject = patchJson(object, patch)
-    patchedObject ? handleResponse(res, 200, 'success', patchedObject) : handleResponse(res, 401, 'failure', object)
+    if (patchedObject) {
+      return handleResponse(res, 200, 'success', patchedObject)
+    } else {
+      return handleResponse(res, 401, 'failure')
+    }
 })
 
-router.post('/thumbnail', /* passport.authenticate('jwt', { session: false }), */ async(req, res, next) => {
+router.post('/thumbnail', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
     let invalidRequest = handleInvalidRequest(req, 'url')
-    if (invalidRequest) handleResponse(res, 501, invalidRequest.message)
+    if (invalidRequest) {
+      return handleResponse(res, 501, invalidRequest.message)
+    }
     let { url } = req.body
     let downloadPath = __dirname + '/image.png'
     let writeStream = fs.createWriteStream(downloadPath)
 
     let data = await download(url, downloadPath)
     data.pipe(writeStream)
-      .on('finish', () => { handleResponse(res, 200, 'success') })
-      .on('error', () => { handleResponse(res, 401, 'failure') })
+      .on('finish', () => {
+        return handleResponse(res, 200, 'success')
+      })
+      .on('error', () => {
+        return handleResponse(res, 401, 'failure')
+      })
 })
 
 module.exports = router

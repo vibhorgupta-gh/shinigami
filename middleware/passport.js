@@ -6,8 +6,8 @@ const options = {}
 options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
 options.secretOrKey = secret
 
-module.exports = new JwtStrategy(options, (jwt_payload, done) => {
-  if (jwt_payload.username) {
+module.exports = new JwtStrategy(options, (payload, done) => {
+  if (payload.username) {
     return done(null, true)
   }
   return done(null, false)
