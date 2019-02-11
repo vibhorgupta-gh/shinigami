@@ -26,6 +26,7 @@
     "node": "*"
   },
   "devDependencies": {
+    "apidoc": "^0.17.7",
     "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -36,6 +37,7 @@
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
+    "jsdoc": "^3.5.5",
     "mocha": "^5.2.0",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.9",
@@ -55,5 +57,12 @@
       "lcovonly"
     ],
     "sourceMap": true
+  },
+  "apidoc": {
+    "name": "stateless microservice",
+    "version": "1.0.0",
+    "template": {
+        "forceLanguage": "en"
+    }
   }
 }

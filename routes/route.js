@@ -8,6 +8,22 @@ const router = express.Router()
 
 passport.use(jwtStrategy)
 
+/**
+ * @api {post} /login - stateless jwt login
+ * @apiSuccess {String} msg - success message
+ * @apiSuccess {String} value - jwt token
+ * @apiSuccessExample {JSON} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "msg": "success",
+ *      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNoaW5pZ2FtaSIsImlhdCI6MTU0OTkwNjg5MSwiZXhwIjoxNTQ5OTA2OTExfQ.VRW_Lqdb8roNu6TWH3AE63I3ZF4BogYj2_uv_h1m_Kk"
+ *    }
+ * @apiErrorExample {JSON} Error
+ *    HTTP/1.1 401 Unauthorized
+ *    {
+ *      "msg": "failure"
+ *    }
+ */
 router.post('/login', (req, res, next) => {
     let invalidRequest = handleInvalidRequest(req, 'username') || handleInvalidRequest(req, 'password')
     if (invalidRequest) {
@@ -23,6 +39,25 @@ router.post('/login', (req, res, next) => {
 
 })
 
+/**
+ * @api {post} /patch - patch JSON object
+ * @apiSuccess {String} msg - success message
+ * @apiSuccess {Object} value - patched JSON object
+ * @apiSuccessExample {JSON} Success
+ *    HTTP/1.1 200 OK
+ {
+    "msg": "success",
+    "value": {
+        "foo": "bar",
+        "baz": "boo"
+    }
+}
+ * @apiErrorExample {JSON} Error
+ *    HTTP/1.1 401 Unauthorized
+ *    {
+ *      "msg": "failure"
+ *    }
+ */
 router.post('/patch', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     let invalidRequest = handleInvalidRequest(req, 'object')
     if (invalidRequest) {
@@ -37,6 +72,20 @@ router.post('/patch', passport.authenticate('jwt', { session: false }), (req, re
     }
 })
 
+/**
+ * @api {post} /thumbnail - download image from path
+ * @apiSuccess {String} msg - success message
+ * @apiSuccessExample {JSON} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "msg": "success"
+ *    }
+ * @apiErrorExample {JSON} Error
+ *    HTTP/1.1 401 Unauthorized
+ *    {
+ *      "msg": "failure"
+ *    }
+ */
 router.post('/thumbnail', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
     let invalidRequest = handleInvalidRequest(req, 'url')
     if (invalidRequest) {
