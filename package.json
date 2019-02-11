@@ -37,9 +37,11 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "mocha": "^5.2.0",
+    "morgan": "^1.9.1",
     "nodemon": "^1.18.9",
     "nyc": "^13.2.0",
-    "should": "^13.2.3"
+    "should": "^13.2.3",
+    "winston": "^3.2.1"
   },
   "nyc": {
     "extensions": [
