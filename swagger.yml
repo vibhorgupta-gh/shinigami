@@ -1,0 +1,113 @@
+swagger: '2.0'
+info:
+  description: A stateless microservice
+  version: 1.0.0
+  title: shinigami
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /login:
+    post:
+      tags:
+      - login
+      description: Logs in a user
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: user body to login
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        200:
+          description: success
+        401:
+          description: unauthorized
+        501:
+          description: invalid request
+  /patch:
+    post:
+      tags:
+      - pacth
+      description: Patches JSON object
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: JSON object to patch
+        schema:
+          $ref: '#/definitions/Patch'
+      responses:
+        200:
+          description: success
+        401:
+          description: unauthorized
+        501:
+          description: invalid request
+  /thumbnail:
+    post:
+      tags:
+      - thumbnail
+      description: Returns thumbnail
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: URL of image to download
+        schema:
+          $ref: '#/definitions/Image'
+      responses:
+        200:
+          description: success
+        401:
+          description: unauthorized
+        501:
+          description: invalid request
+definitions:
+  User:
+    type: object
+    required:
+    - username
+    properties:
+      username:
+        type: string
+        example: shinigami
+      password:
+        type: string
+        example: shinigami
+  Patch:
+    type: object
+    required:
+    - object
+    properties:
+      object:
+        type: object
+        example: foo:bar
+      patch:
+        type: array
+        items:
+          type: object
+        example: op:add
+                 path:baz
+                 value:boo
+  Image:
+    type: object
+    required:
+    - url
+    properties:
+      url:
+        type: string
+        example: https://bit.ly/2E17Ncg
+basePath: /
+schemes:
+ - http
