@@ -1,9 +1,9 @@
 const express = require('express')
-const fs = require('fs')
+const path = require('path')
 const passport = require('passport')
 const jwtStrategy = require('../middleware/passport.js')
 const { handleResponse, handleInvalidRequest } = require('../middleware/validator.js')
-const { token, patchJson, download } = require('../controllers/helpers.js')
+const { token, patchJson, download, encodedThumbnail } = require('../controllers/helpers.js')
 const router = express.Router()
 
 passport.use(jwtStrategy)
@@ -75,10 +75,12 @@ router.post('/patch', passport.authenticate('jwt', { session: false }), (req, re
 /**
  * @api {post} /thumbnail - download image from path
  * @apiSuccess {String} msg - success message
+ * @apiSuccess {String} value - base64 encoded thumbnail
  * @apiSuccessExample {JSON} Success
  *    HTTP/1.1 200 OK
  *    {
- *      "msg": "success"
+ *      "msg": "success",
+ *      "value": "<base64 encoding>"
  *    }
  * @apiErrorExample {JSON} Error
  *    HTTP/1.1 401 Unauthorized
@@ -86,23 +88,22 @@ router.post('/patch', passport.authenticate('jwt', { session: false }), (req, re
  *      "msg": "failure"
  *    }
  */
-router.post('/thumbnail', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+router.post('/thumbnail' , passport.authenticate('jwt', { session: false }), async (req, res, next) => {
     let invalidRequest = handleInvalidRequest(req, 'url')
     if (invalidRequest) {
       return handleResponse(res, 501, invalidRequest.message)
     }
     let { url } = req.body
-    let downloadPath = __dirname + '/image.png'
-    let writeStream = fs.createWriteStream(downloadPath)
+    let downloadPath = path.join(__dirname, '../images', '/image.png')
+    let thumbnailPath = path.join(__dirname, '../images', '/output.png')
 
-    let data = await download(url, downloadPath)
-    data.pipe(writeStream)
-      .on('finish', () => {
-        return handleResponse(res, 200, 'success')
-      })
-      .on('error', () => {
-        return handleResponse(res, 401, 'failure')
-      })
+    await download(url, downloadPath, thumbnailPath)
+    let thumbnail = encodedThumbnail(thumbnailPath)
+    if (thumbnail) {
+      return handleResponse(res, 200, 'success', thumbnail)
+    } else {
+      return handleResponse(res, 401, 'failure')
+    }
 })
 
 module.exports = router

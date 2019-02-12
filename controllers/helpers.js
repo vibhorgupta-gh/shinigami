@@ -1,5 +1,8 @@
+const fs = require('fs')
 const { apply_patch } = require('jsonpatch')
 const jwt = require('jsonwebtoken')
+const sharp = require('sharp')
+const base64 = require('base64-img')
 const path = require('path')
 const axios = require('axios')
 const { secret } = require('../config.js')
@@ -38,9 +41,11 @@ const patchJson = (object, patch) => {
  * @function - Download image from url
  * @param {String} url - image url from request body
  * @param {String} downloadPath - path to download image
+ * @param {String} thumbnailPath - path to generated thumbnail
  * @return data stream of downloaded image
  */
-const download = async (url, downloadPath) => {
+const download = async (url, downloadPath, thumbnailPath) => {
+  let writeStream = fs.createWriteStream(downloadPath)
   const options = {
     width: 50,
     height: 50
@@ -55,11 +60,38 @@ const download = async (url, downloadPath) => {
     responseType: 'stream',
     headers: { 'Cookie': request.headers['set-cookie'] }
   })
-  return response.data
+  response.data.pipe(writeStream)
+    .on('finish', () => { resizeImage(downloadPath, thumbnailPath, options) })
+    .on('error', () => { throw new Error('Couldn\'t download image') })
+}
+
+/**
+ * @function - Resize downloaded image
+ * @param {String} downloadPath - path to downloaded image
+ * @param {String} thumbnailPath - path to create thumbnail
+ * @param {Object} options - resizing options
+ */
+const resizeImage = (downloadPath, thumbnailPath, options) => {
+  sharp(downloadPath)
+    .resize(options)
+    .toFile(thumbnailPath)
+    .then(() => console.log('Image downloaded at ' + thumbnailPath))
+    .catch(err => console.error('Write error: ' + err))
+}
+
+/**
+ * @function - Return base64 encoded image
+ * @param {String} imagePath - path to thumbnail
+ * @return base64 string
+ */
+const encodedThumbnail = (imagePath) => {
+  return base64.base64Sync(imagePath)
 }
 
 module.exports = {
   token,
   patchJson,
-  download
+  download,
+  resizeImage,
+  encodedThumbnail
 }

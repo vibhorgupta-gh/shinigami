@@ -1,10 +1,11 @@
+const fs = require('fs')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const promise = require('chai-as-promised')
 const should = chai.should()
 const path = require('path')
 const server = require('../server.js')
-const { token, patchJson, download } = require('../controllers/helpers.js')
+const { token, patchJson, download, encodedThumbnail, resizeImage } = require('../controllers/helpers.js')
 const { handleInvalidRequest } = require('../middleware/validator.js')
 
 chai.use(chaiHttp)
@@ -35,9 +36,25 @@ describe('Unit test', () => {
 
   it('download function works', () => {
     let url = 'https://bit.ly/2E17Ncg'
-    let downloadPath = path.join(__dirname, '/image.png')
-    const data = download(url, downloadPath)
+    let downloadPath = path.join(__dirname, '../images', '/image.png')
+    let thumbnailPath = path.join(__dirname, '../images', '/output.png')
+    const data = download(url, downloadPath, thumbnailPath)
     return data.should.be.fulfilled
+  })
+
+  it('resizeImage function works', done => {
+    let downloadPath = path.join(__dirname, '../images', '/image.png')
+    let thumbnailPath = path.join(__dirname, '../images', '/output.png')
+    let options = { width: 50, height: 50 }
+    resizeImage(downloadPath, thumbnailPath, options)
+    fs.readFile(thumbnailPath, done)
+  })
+
+  it('encodedThumbnail function works', done => {
+    let imagePath = path.join(__dirname, '../images', '/test.png')
+    let base64String = encodedThumbnail(imagePath)
+    base64String.should.be.an('string')
+    done()
   })
 })
 
@@ -120,7 +137,9 @@ describe('Integration test', () => {
       .end((req, res) => {
         res.status.should.be.equal(200)
         let msg = res.body.msg
+        let value = res.body.value
         msg.should.be.equal('success')
+        value.should.be.an('string')
       })
     done()
   })
