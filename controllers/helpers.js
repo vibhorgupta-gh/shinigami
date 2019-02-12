@@ -3,7 +3,6 @@ const { apply_patch } = require('jsonpatch')
 const jwt = require('jsonwebtoken')
 const sharp = require('sharp')
 const base64 = require('base64-img')
-const path = require('path')
 const axios = require('axios')
 const { secret } = require('../config.js')
 

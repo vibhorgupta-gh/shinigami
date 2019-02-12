@@ -88,7 +88,7 @@ router.post('/patch', passport.authenticate('jwt', { session: false }), (req, re
  *      "msg": "failure"
  *    }
  */
-router.post('/thumbnail' , passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+router.post('/thumbnail', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
     let invalidRequest = handleInvalidRequest(req, 'url')
     if (invalidRequest) {
       return handleResponse(res, 501, invalidRequest.message)
