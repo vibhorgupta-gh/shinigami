@@ -77,9 +77,9 @@ A stateless microservice built with Node.js
 
   #### Installation and Setup
 
-  - To install the dependencies, navigate to project root and run `npm install`.
+  - To install the dependencies, navigate to project root and `npm install`.
 
-  - To run the server, run `npm run start`
+  - To run the server, `npm run start`
 
   #### Testing
 
@@ -87,7 +87,7 @@ A stateless microservice built with Node.js
 
   - Ensure that you do not already have a process running on port `4000` of your localhost. If you do, kill that process using `kill -9 <pid>`.
 
-  - To generate a code coverage report, run `npm run test:report`. This project uses [nyc]() for codecov. Nyc is a beautiful package recommended by `istanbul` itself.
+  - To generate a code coverage report, `npm run test:report`. This project uses [nyc](https://www.npmjs.com/package/nyc) for codecov. `nyc` is a beautiful package recommended by `istanbul` itself.
 
   - To run syntax and linting tests, run `npm run lint`. This project uses `eslint` for linting standards.
 
